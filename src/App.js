@@ -1,5 +1,6 @@
 import './App.css';
 import Hand from './players/hand';
+import Table from './table/table';
 
 const hand = [
   {
@@ -30,7 +31,8 @@ const hand = [
 
 function App() {
   return (
-    <Hand cards={hand} sort={true} />
+    // <Hand cards={hand} sort={true} />
+    <Table card={hand[0]} />
   );
 }
 
