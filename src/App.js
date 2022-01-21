@@ -1,42 +1,22 @@
 import './App.css';
-import Hand from './players/hand';
-import Table from './table/table';
-import Server from './connection/server';
 import ServerTable from './table/serverTable';
+import { Route, Routes } from 'react-router';
+import { BrowserRouter, useParams } from 'react-router-dom';
 
-const hand = [
-  {
-    color: "red",
-    value: 0
-  },
-  {
-    color: "black",
-    value: "wild+4"
-  },
-  {
-    color: "blue",
-    value: "reverse"
-  },
-  {
-    color: "green",
-    value: "draw"
-  },
-  {
-    color: "black",
-    value: "wild"
-  },
-  {
-    color: "green",
-    value: "skip"
-  },
-];
+function PlayComponent() {
+  const { id } = useParams();
+  return <div>Play: {id}</div>;
+}
 
 function App() {
-  // const server = new Server(console.log);
   return (
-    // <Hand cards={hand} sort={true} />
-    // <Table card={hand[0]} />
-    <ServerTable />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/play/:id" element={<PlayComponent />} />
+        <Route path="/serve" element={<ServerTable playURL={new URL("/play/", window.location)} />} />
+        <Route path="/" element={<div>KahUNO</div>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
