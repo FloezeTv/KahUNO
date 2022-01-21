@@ -1,18 +1,32 @@
 import './App.css';
-import Card from './components/card';
+import Hand from './players/hand';
+
+const hand = [
+  {
+    color: "red",
+    value: 0
+  },
+  {
+    color: "black",
+    value: "wild+4"
+  },
+  {
+    color: "blue",
+    value: "reverse"
+  },
+  {
+    color: "green",
+    value: "draw"
+  },
+  {
+    color: "black",
+    value: "wild"
+  },
+];
 
 function App() {
   return (
-    <div style={{ background: 'black', height: '50vh', display: 'flex', gap: '10px', flexFlow: 'wrap' }}>
-      {["red", "yellow", "green", "blue"].map(c =>
-        [...Array(10).keys(), "reverse", "skip", "draw"].map(v =>
-          <Card color={c} value={v} key={c + " " + v} />
-        )
-      )}
-      {["wild", "wild+4"].map(v =>
-        <Card color="black" value={v} key={v} />
-      )}
-    </div>
+    <Hand cards={hand} />
   );
 }
 
