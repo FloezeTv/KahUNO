@@ -22,11 +22,15 @@ const hand = [
     color: "black",
     value: "wild"
   },
+  {
+    color: "green",
+    value: "skip"
+  },
 ];
 
 function App() {
   return (
-    <Hand cards={hand} />
+    <Hand cards={hand} sort={true} />
   );
 }
 
