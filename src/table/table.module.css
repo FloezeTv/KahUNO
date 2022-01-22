@@ -13,8 +13,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    --slide-direction-x: 0.5;
+    --slide-direction-y: 0.5;
 }
 
-.table > * {
+.table>* {
+    position: absolute;
     height: 80%;
+    animation: slide-in 1s ease-out;
+}
+
+@keyframes slide-in {
+    0% {
+        transform: translate(calc(var(--slide-direction-x) * 100vw), calc(var(--slide-direction-y) * 100vh));
+    }
 }

@@ -14,3 +14,13 @@
     gap: 10px;
     background: black;
 }
+
+.hand > * {
+    animation: slide-in 1s ease-out;
+}
+
+@keyframes slide-in {
+    0% {
+        transform: translateX(100vw);
+    }
+}
