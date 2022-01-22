@@ -2,10 +2,11 @@ import './App.css';
 import ServerTable from './table/serverTable';
 import { Route, Routes } from 'react-router';
 import { BrowserRouter, useParams } from 'react-router-dom';
+import ClientHand from './players/clientHand';
 
 function PlayComponent() {
   const { id } = useParams();
-  return <div>Play: {id}</div>;
+  return <ClientHand id={id}/>;
 }
 
 function App() {
