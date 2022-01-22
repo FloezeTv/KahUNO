@@ -1,19 +1,27 @@
 import Peer from "peerjs";
-import { ConnectEvent, EventHandler } from "./events";
+import { CardDrawEvent, CardHandSendEvent, ConnectEvent, EventHandler } from "./events";
 
 class Client {
 
-    constructor(id, onConnect, onCardsUpdate, myTurnCallback) {
+    // Callbacks:
+    // - onConnect: Client connected to table
+    // - onCardDraw: A new card has been sent to the client
+    // - onHandUpdate: A full hand has been sent to the client
+
+    constructor(id, callbacks) {
+        this.callbacks = callbacks;
+
         this.client = new Peer();
         this.eventHandler = new EventHandler();
 
-        this.eventHandler.on('connect', event => console.log('connect: ', event));
+        this.eventHandler.on(CardDrawEvent, this.callbacks.onCardDraw);
+        this.eventHandler.on(CardHandSendEvent, this.callbacks.onHandUpdate);
 
         this.client.on('open', () => {
             this.connection = this.client.connect(id);
             this.connection.on('open', () => {
-                onConnect();
-                this.connection.on('data', this.eventHandler.handler);
+                this.callbacks.onConnect();
+                this.connection.on('data', this.eventHandler.handler(this.connection));
                 this.connection.send(new ConnectEvent(this.client.id));
             });
         });

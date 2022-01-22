@@ -27,6 +27,7 @@ class ServerTable extends React.Component {
                     this.setState({ idQr: url });
             });
         });
+        this.server.game.callbacks.onCurrentCardChange = card => this.setState({ currentCard: card });
     }
 
     render() {
@@ -37,13 +38,12 @@ class ServerTable extends React.Component {
                     <div className={style.join}>
                         {this.state.idQr && <img src={this.state.idQr} className={style.qr} />}
                         <div className={style.id}>ID: {this.state.id}</div>
-                        <button className={style.button} onClick={() => this.setState({ started: true })}>Start!</button>
+                        <button className={style.button} onClick={() => { this.setState({ started: true }); this.server.game.start(); }}>Start!</button>
                     </div>
                 }
             </>
         );
     }
-
 }
 
 export default ServerTable;

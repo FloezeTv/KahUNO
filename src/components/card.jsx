@@ -55,3 +55,21 @@ class Card extends React.Component {
 }
 
 export default Card;
+
+
+const getDrawPile = () => {
+    return [
+        ...[...new Array(2).keys()].flatMap(() => ['red', 'green', 'blue', 'yellow'].flatMap(c => [...Array(10).keys(), 'reverse', 'skip', 'draw'].flatMap(v => ({ color: c, value: v })))),
+        ...[...new Array(4).keys()].flatMap(() => ['wild', 'wild+4'].flatMap(v => ({ color: 'black', value: v })))
+    ];
+}
+
+const shuffle = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * i);
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+export { getDrawPile, shuffle };

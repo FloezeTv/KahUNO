@@ -14,14 +14,33 @@ class ConnectEvent extends Event {
     }
 }
 
+class CardDrawEvent extends Event {
+
+    static type = 'cardDraw';
+
+    constructor(color, value) {
+        super(CardDrawEvent.type, { 'color': color, 'value': value });
+    }
+}
+
+class CardHandSendEvent extends Event {
+
+    static type = 'cardHand';
+
+    constructor(cards) {
+        super(CardHandSendEvent.type, cards);
+    }
+
+}
+
 function EventHandler() {
     this.handlers = {};
-    this.handler = (msg) => {
+    this.handler = (conn) => (msg) => {
         if (!msg.type || !msg.value)
             return;
         const h = this.handlers[msg.type];
         if (h)
-            h.forEach(callback => callback(msg.value));
+            h.forEach(callback => callback(msg.value, conn));
     };
     this.on = (type, callback) => {
         type = type.type || type;
@@ -31,4 +50,4 @@ function EventHandler() {
     };
 };
 
-export { EventHandler, ConnectEvent };
+export { EventHandler, ConnectEvent, CardDrawEvent, CardHandSendEvent };

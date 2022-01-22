@@ -13,14 +13,19 @@ class ClientHand extends React.Component {
             myTurn: false,
         };
 
-        this.client = new Client(this.props.id, () => this.setState({ connected: true }), c => this.setState({ cards: c }), m => this.setState({ myTurn: m }));
+        this.client = new Client(this.props.id, {
+            onConnect: () => this.setState({ connected: true }),
+            onCardDraw: c => this.setState({ cards: this.state.cards.concat(c) }),
+            onHandUpdate: c => this.setState({ cards: c }),
+            onMyTurn: m => this.setState({ myTurn: m })
+        });
     }
 
     render() {
         return (
             <>
                 {this.state.connected ?
-                    <Hand cards={this.state.cards} />
+                    <Hand cards={this.state.cards} sort />
                     : <div>Loading...</div>
                 }
             </>
