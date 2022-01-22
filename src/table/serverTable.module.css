@@ -47,5 +47,5 @@
 .qr {
     height: 30vh;
     image-rendering: pixelated;
-    border-radius: 16px;
+    border-radius: 2%;
 }
