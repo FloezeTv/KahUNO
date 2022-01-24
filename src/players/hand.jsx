@@ -10,7 +10,7 @@ class Hand extends React.Component {
 
         return (
             <div className={style.hand}>
-                {this.props.cards.map((card, index) => (<Card color={card.color} value={card.value} key={index} />))}
+                {this.props.cards.map((card, index) => (<Card color={card.color} value={card.value} key={index} onClick={() => this.props.onClick && this.props.onClick(card)} />))}
             </div>
         );
     }

@@ -33,6 +33,16 @@ class CardHandSendEvent extends Event {
 
 }
 
+class CardPlayEvent extends Event {
+
+    static type = 'cardPlay';
+
+    constructor(color, value) {
+        super(CardPlayEvent.type, { 'color': color, 'value': value });
+    }
+
+}
+
 function EventHandler() {
     this.handlers = {};
     this.handler = (conn) => (msg) => {
@@ -50,4 +60,4 @@ function EventHandler() {
     };
 };
 
-export { EventHandler, ConnectEvent, CardDrawEvent, CardHandSendEvent };
+export { EventHandler, ConnectEvent, CardDrawEvent, CardHandSendEvent, CardPlayEvent };

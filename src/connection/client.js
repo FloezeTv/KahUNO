@@ -1,5 +1,5 @@
 import Peer from "peerjs";
-import { CardDrawEvent, CardHandSendEvent, ConnectEvent, EventHandler } from "./events";
+import { CardDrawEvent, CardHandSendEvent, CardPlayEvent, ConnectEvent, EventHandler } from "./events";
 
 class Client {
 
@@ -28,7 +28,7 @@ class Client {
     }
 
     tryPlayCard(card) {
-        this.connection.send({ type: 'play', value: card });
+        this.connection.send(new CardPlayEvent(card.color, card.value));
     }
 
 }

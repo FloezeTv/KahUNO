@@ -25,7 +25,7 @@ class ClientHand extends React.Component {
         return (
             <>
                 {this.state.connected ?
-                    <Hand cards={this.state.cards} sort />
+                    <Hand cards={this.state.cards} sort onClick={c => this.client.tryPlayCard(c)} />
                     : <div>Loading...</div>
                 }
             </>

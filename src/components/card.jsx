@@ -27,7 +27,7 @@ class Card extends React.Component {
 
     render() {
         return (
-            <div className={style.outer} style={this.filteredStyle} >
+            <div className={style.outer} style={this.filteredStyle} onClick={this.props.onClick}>
                 <div className={style.inner} style={{ background: `var(--${this.props.color}` }}>
                     <div className={style.mark} ref={this.markRef} style={{ fontSize: this.state.markHeight * 0.7 }}>
                         <svg width="100%" height="100%" style={{ filter: `drop-shadow(${this.state.markHeight * 0.02}px ${this.state.markHeight * 0.02}px black)` }}>
