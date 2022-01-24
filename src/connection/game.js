@@ -11,21 +11,23 @@ class Game {
     constructor(callbacks) {
         this.callbacks = callbacks || {};
 
-        this.players = [];
+        this.players = {}; // id -> player (connection, ...)
         this.reset();
 
         console.log(this.drawPile);
     }
 
-    addPlayer(connection) {
-        this.players.push({ 'connection': connection });
+    addPlayer(connection, id) {
+        console.log('joined', id);
+        this.players[id] = { 'connection': connection };
     }
 
     reset() {
         this.drawPile = [];
         this.currentCard = {};
-        this.currentPlayers = [];
+        this.currentPlayers = []; // ids
         this.currentPlayer = 0;
+        this.playerData = {}; // id -> data (cards, ...)
     }
 
     start() {
@@ -34,15 +36,14 @@ class Game {
         this.addDrawPile();
         this.setCurrentCard(this.drawPile.pop());
 
-        this.players.forEach(p => {
-            const player = {
-                'connection': p.connection,
+        Object.entries(this.players).forEach(([id, player]) => {
+            this.playerData[id] = {
                 'cards': []
-            };
+            }
             player.connection.send(new CardHandSendEvent([]));
-            this.currentPlayers.push(player);
+            this.currentPlayers.push(id);
             for (let i = 0; i < START_CARDS; i++)
-                this.sendCard(player);
+                this.sendCard(id);
         });
     }
 
@@ -51,10 +52,10 @@ class Game {
         this.callback('onCurrentCardChange', card);
     }
 
-    sendCard(player) {
+    sendCard(playerId) {
         const card = this.drawPile.pop();
-        player.cards.push(card);
-        player.connection.send(new CardDrawEvent(card.color, card.value));
+        this.playerData[playerId].cards.push(card);
+        this.players[playerId].connection.send(new CardDrawEvent(card.color, card.value));
     }
 
     addDrawPile() {
