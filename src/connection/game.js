@@ -72,6 +72,29 @@ class Game {
             this.callbacks[callbackName](...args);
     }
 
+    playCard(id, card) {
+        if (!this.isCurrentPlayer(id))
+            return;
+        const playerData = this.playerData[id];
+        if (!playerData)
+            return;
+        const cardIndex = playerData.cards.findIndex(c => c.color === card.color && c.value === card.value);
+        if (cardIndex >= 0) {
+            playerData.cards.splice(cardIndex, 1);
+            this.players[id].connection.send(new CardHandSendEvent(playerData.cards));
+            this.setCurrentCard(card);
+            this.nextPlayer();
+        }
+    }
+
+    isCurrentPlayer(id) {
+        return this.currentPlayers[this.currentPlayer] === id;
+    }
+
+    nextPlayer() {
+        this.currentPlayer = (this.currentPlayer + 1) % this.currentPlayers.length;
+    }
+
 }
 
 export default Game;

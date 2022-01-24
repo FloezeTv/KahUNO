@@ -1,5 +1,5 @@
 import Peer from "peerjs";
-import { ConnectEvent, EventHandler } from "./events";
+import { CardPlayEvent, ConnectEvent, EventHandler } from "./events";
 import Game from "./game";
 
 class Server {
@@ -10,7 +10,8 @@ class Server {
         this.game = new Game();
 
         this.eventHandler = new EventHandler();
-        this.eventHandler.on(ConnectEvent, (event, conn) => this.game.addPlayer(conn));
+        this.eventHandler.on(ConnectEvent, (event, conn) => this.game.addPlayer(conn, conn.peer));
+        this.eventHandler.on(CardPlayEvent, (event, conn) => this.game.playCard(conn.peer, event));
         console.log(this.game);
 
         this.server.on('connection', conn => {
