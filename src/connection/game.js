@@ -25,15 +25,8 @@ class Game {
     removePlayer(id) {
         console.log('left', id);
         delete this.players[id];
-        const index = this.currentPlayers.indexOf(id);
-        if (index >= 0) {
-            this.currentPlayers.splice(index, 1);
-            if (index == this.currentPlayer)
-                this.nextPlayer();
-        }
-        delete this.playerData[id];
-        // maybe replace player by bot instead of remove?
-        // makes it possible to rejoin
+        if (this.isCurrentPlayer(id))
+            this.makeBotMove();
     }
 
     reset() {
@@ -87,7 +80,7 @@ class Game {
     }
 
     playCard(id, card) {
-        if (!this.isCurrentPlayer(id))
+        if (!this.isCurrentPlayer(id) || !this.canPlayCard(card))
             return;
         const playerData = this.playerData[id];
         if (!playerData)
@@ -101,12 +94,33 @@ class Game {
         }
     }
 
+    canPlayCard(card) {
+        return true; // TODO: check if card is allowed
+    }
+
     isCurrentPlayer(id) {
         return this.currentPlayers[this.currentPlayer] === id;
     }
 
     nextPlayer() {
         this.currentPlayer = (this.currentPlayer + 1) % this.currentPlayers.length;
+        if (!this.players[this.currentPlayers[this.currentPlayer]])
+            this.makeBotMove();
+    }
+
+    makeBotMove() {
+        const cards = this.playerData[this.currentPlayers[this.currentPlayer]].cards;
+        for (let cardIndex = 0; cardIndex < cards.length; cardIndex++) {
+            const card = cards[cardIndex];
+            if (this.canPlayCard(card)) {
+                cards.splice(cardIndex, 1);
+                this.setCurrentCard(card);
+                this.nextPlayer();
+                return;
+            }
+        }
+        // Could not play any cards
+        // TODO: draw card
     }
 
 }
