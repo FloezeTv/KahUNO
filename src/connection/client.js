@@ -19,18 +19,32 @@ class Client {
 
         this.pingHandler = PingHandler(this.eventHandler, () => console.warn("Disconnected!"));
 
+        this.messageQueue = []; // messages to send right after connecting
+
         this.client.on('open', () => {
             this.connection = this.client.connect(id);
             this.connection.on('open', () => {
                 this.callbacks.onConnect();
                 this.connection.on('data', this.eventHandler.handler(this.connection));
-                this.connection.send(new ConnectEvent(this.client.id));
+                this.messageQueue.forEach(message => this.connection.send(message));
+                delete this.messageQueue;
             });
         });
     }
 
+    send(message) {
+        if (this.connection)
+            this.connection.send(message);
+        else
+            this.messageQueue.push(message);
+    }
+
+    connect(name) {
+        this.send(new ConnectEvent(name));
+    }
+
     tryPlayCard(card) {
-        this.connection.send(new CardPlayEvent(card.color, card.value));
+        this.send(new CardPlayEvent(card.color, card.value));
     }
 
 }

@@ -1,6 +1,7 @@
 import React from "react";
-import Hand from "../players/hand";
 import Client from "../connection/client";
+import Hand from "../players/hand";
+import style from "./clientHand.module.css";
 
 class ClientHand extends React.Component {
 
@@ -10,6 +11,8 @@ class ClientHand extends React.Component {
         this.state = {
             cards: [],
             connected: false,
+            name: '',
+            enteredName: false,
             myTurn: false,
         };
     }
@@ -24,14 +27,19 @@ class ClientHand extends React.Component {
     }
 
     render() {
-        return (
-            <>
-                {this.state.connected ?
-                    <Hand cards={this.state.cards} sort onClick={c => this.client.tryPlayCard(c)} />
-                    : <div>Loading...</div>
-                }
-            </>
-        );
+        if (!this.state.enteredName) {
+            return (
+                <div className={style.nameForm}>
+                    <div>Enter name:</div>
+                    <input type="text" value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
+                    <button onClick={() => { this.setState({ enteredName: true }); this.client.connect(this.state.name) }}>Join</button>
+                </div>
+            )
+        } else if (!this.state.connected) {
+            return <div>Loading...</div>
+        } else {
+            return <Hand cards={this.state.cards} sort onClick={c => this.client.tryPlayCard(c)} />
+        }
     }
 
 }

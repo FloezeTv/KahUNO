@@ -9,8 +9,15 @@ class Server {
 
         this.game = new Game();
 
+        this.playerData = {};
+
         this.eventHandler = new EventHandler();
-        this.eventHandler.on(ConnectEvent, (event, conn) => this.game.addPlayer(conn, conn.peer));
+        this.eventHandler.on(ConnectEvent, (event, conn) => {
+            const id = conn.peer;
+            this.game.addPlayer(conn, id);
+            this.playerData[id] = { 'name': event.name };
+            console.log(this.playerData);
+        });
         this.eventHandler.on(CardPlayEvent, (event, conn) => this.game.playCard(conn.peer, event));
 
         this.pingHandler = PingHandler(this.eventHandler, (id, connection) => this.game.removePlayer(id));
