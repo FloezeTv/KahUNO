@@ -4,7 +4,12 @@ import Game from "./game";
 
 class Server {
 
-    constructor(idCallback) {
+    // Callbacks:
+    // - onId: Server id has been issued
+    // - onJoin: A player has joined the game
+    // - onLeave: A player has left the game
+
+    constructor(callbacks) {
         this.server = new Peer();
 
         this.game = new Game();
@@ -16,11 +21,14 @@ class Server {
             const id = conn.peer;
             this.game.addPlayer(conn, id);
             this.playerData[id] = { 'name': event.name };
-            console.log(this.playerData);
+            callbacks.onJoin(id, this.playerData[id]);
         });
         this.eventHandler.on(CardPlayEvent, (event, conn) => this.game.playCard(conn.peer, event));
 
-        this.pingHandler = PingHandler(this.eventHandler, (id, connection) => this.game.removePlayer(id));
+        this.pingHandler = PingHandler(this.eventHandler, (id, connection) => {
+            this.game.removePlayer(id);
+            callbacks.onLeave(id, this.playerData[id]);
+        });
 
         console.log(this.game);
 
@@ -30,7 +38,7 @@ class Server {
             });
         });
 
-        this.server.on('open', idCallback);
+        this.server.on('open', callbacks.onId);
     }
 
     /**
