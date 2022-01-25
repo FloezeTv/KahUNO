@@ -12,7 +12,9 @@ class ClientHand extends React.Component {
             connected: false,
             myTurn: false,
         };
+    }
 
+    componentDidMount() {
         this.client = new Client(this.props.id, {
             onConnect: () => this.setState({ connected: true }),
             onCardDraw: c => this.setState({ cards: this.state.cards.concat(c) }),

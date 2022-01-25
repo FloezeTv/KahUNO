@@ -16,7 +16,9 @@ class ServerTable extends React.Component {
             players: [],
             started: false,
         };
+    }
 
+    componentDidMount() {
         this.server = new Server(id => {
             this.setState({ 'id': id });
             qrcode.toDataURL(this.props.playURL ? new URL(id, this.props.playURL).href : id, {
