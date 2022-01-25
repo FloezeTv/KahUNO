@@ -95,7 +95,8 @@ class Game {
     }
 
     canPlayCard(card) {
-        return true; // TODO: check if card is allowed
+        // TODO: check if card is wild
+        return this.currentCard.value === card.value || this.currentCard.color == card.color || card.color == 'black';
     }
 
     isCurrentPlayer(id) {
