@@ -14,6 +14,15 @@ class ConnectEvent extends Event {
     }
 }
 
+class PingEvent extends Event {
+
+    static type = 'ping';
+
+    constructor() {
+        super(PingEvent.type, {});
+    }
+}
+
 class CardDrawEvent extends Event {
 
     static type = 'cardDraw';
@@ -60,4 +69,37 @@ function EventHandler() {
     };
 };
 
-export { EventHandler, ConnectEvent, CardDrawEvent, CardHandSendEvent, CardPlayEvent };
+const PingHandler = (eventHandler, deadCallback, WAIT_TIME = 10000) => {
+    const lastPings = [];
+    const updateLastPing = (event, connection) => {
+        const index = lastPings.findIndex(ping => ping.id === connection.peer);
+        if (index >= 0) {
+            lastPings[index].lastSeen = Date.now();
+        } else {
+            lastPings.push({
+                id: connection.peer,
+                lastSeen: Date.now() + WAIT_TIME, /* Longer time allowed until first ping */
+                'connection': connection
+            });
+        }
+    };
+    eventHandler.on(ConnectEvent, updateLastPing);
+    eventHandler.on(PingEvent, updateLastPing);
+    const pingInterval = setInterval(() => {
+        const now = Date.now();
+        for (const ping of lastPings) {
+            if (now - ping.lastSeen >= WAIT_TIME) {
+                lastPings.splice(ping, 1);
+                deadCallback(ping.id, ping.connection);
+            } else {
+                ping.connection.send(new PingEvent());
+            }
+        }
+    }, WAIT_TIME / 3);
+
+    return {
+        stop: () => clearInterval(pingInterval)
+    }
+};
+
+export { EventHandler, PingHandler, ConnectEvent, PingEvent, CardDrawEvent, CardHandSendEvent, CardPlayEvent };

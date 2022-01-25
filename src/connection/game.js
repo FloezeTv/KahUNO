@@ -22,6 +22,20 @@ class Game {
         this.players[id] = { 'connection': connection };
     }
 
+    removePlayer(id) {
+        console.log('left', id);
+        delete this.players[id];
+        const index = this.currentPlayers.indexOf(id);
+        if (index >= 0) {
+            this.currentPlayers.splice(index, 1);
+            if (index == this.currentPlayer)
+                this.nextPlayer();
+        }
+        delete this.playerData[id];
+        // maybe replace player by bot instead of remove?
+        // makes it possible to rejoin
+    }
+
     reset() {
         this.drawPile = [];
         this.currentCard = {};
