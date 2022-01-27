@@ -21,7 +21,6 @@ class ClientHand extends React.Component {
     componentDidMount() {
         this.client = new Client(this.props.id, {
             onConnect: () => this.setState({ connected: true }),
-            onCardDraw: c => this.setState({ cards: this.state.cards.concat(c) }),
             onHandUpdate: c => this.setState({ cards: c }),
             onChooseColor: () => this.setState({ chooseColor: true }),
         });

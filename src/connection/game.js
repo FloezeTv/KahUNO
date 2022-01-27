@@ -1,5 +1,5 @@
 import { getDrawPile, shuffle } from "../components/card";
-import { CardDrawEvent, CardHandSendEvent, ChooseColorEvent } from "./events";
+import { CardHandSendEvent, ChooseColorEvent } from "./events";
 
 const START_CARDS = 7;
 
@@ -64,7 +64,7 @@ class Game {
     sendCard(playerId) {
         const card = this.drawPile.pop();
         this.playerData[playerId].cards.push(card);
-        this.players[playerId].connection.send(new CardDrawEvent(card.color, card.value));
+        this.players[playerId].connection.send(new CardHandSendEvent(this.playerData[playerId].cards));
     }
 
     addDrawPile() {

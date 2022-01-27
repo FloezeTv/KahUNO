@@ -23,15 +23,6 @@ class PingEvent extends Event {
     }
 }
 
-class CardDrawEvent extends Event {
-
-    static type = 'cardDraw';
-
-    constructor(color, value) {
-        super(CardDrawEvent.type, { 'color': color, 'value': value });
-    }
-}
-
 class CardHandSendEvent extends Event {
 
     static type = 'cardHand';
@@ -122,4 +113,4 @@ const PingHandler = (eventHandler, deadCallback, WAIT_TIME = 10000) => {
     }
 };
 
-export { EventHandler, PingHandler, ConnectEvent, PingEvent, CardDrawEvent, CardHandSendEvent, CardPlayEvent, ChooseColorEvent, ColorChosenEvent };
+export { EventHandler, PingHandler, ConnectEvent, PingEvent, CardHandSendEvent, CardPlayEvent, ChooseColorEvent, ColorChosenEvent };
