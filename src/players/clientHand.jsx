@@ -27,13 +27,18 @@ class ClientHand extends React.Component {
         });
     }
 
+    connect() {
+        this.setState({ enteredName: true });
+        this.client.connect(this.state.name);
+    }
+
     render() {
         if (!this.state.enteredName) {
             return (
                 <div className={style.nameForm}>
                     <div>Enter name:</div>
-                    <input type="text" value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
-                    <button onClick={() => { this.setState({ enteredName: true }); this.client.connect(this.state.name) }}>Join</button>
+                    <input type="text" onKeyDown={e => e.key == "Enter" && this.connect()} value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
+                    <button onClick={() => this.connect()}>Join</button>
                 </div>
             )
         } else if (!this.state.connected) {
@@ -42,7 +47,7 @@ class ClientHand extends React.Component {
             return (
                 <>
                     <Hand cards={this.state.cards} sort onClick={c => this.client.tryPlayCard(c)} />
-                    {this.state.chooseColor && <ColorChooser onClick={color => {this.setState({ chooseColor: false }); this.client.chooseColor(color)}} />}
+                    {this.state.chooseColor && <ColorChooser onClick={color => { this.setState({ chooseColor: false }); this.client.chooseColor(color) }} />}
                 </>
             );
         }
