@@ -82,7 +82,7 @@ class Game {
     }
 
     playCard(id, card) {
-        if (!this.isCurrentPlayer(id) || !this.canPlayCard(card) || this.chooseColor)
+        if (!this.isCurrentPlayer(id) || !this.canPlayCard(card) || this.choosingColor)
             return;
         const playerData = this.playerData[id];
         if (!playerData)
@@ -101,7 +101,7 @@ class Game {
     }
 
     chooseColor(id, color) {
-        if (this.isCurrentPlayer(id) && this.chooseColor) {
+        if (this.isCurrentPlayer(id) && this.choosingColor) {
             this.currentCard.color = color;
             this.callback('onCurrentCardUpdate', this.currentCard);
             this.nextPlayer();
