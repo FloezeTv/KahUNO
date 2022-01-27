@@ -21,3 +21,27 @@
     border-radius: 8px;
     font-size: 32px;
 }
+
+.buttonPanel {
+    position: fixed;
+    right: 0;
+    top: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.buttonPanel>* {
+    aspect-ratio: 1;
+    height: 12vh;
+    background: #2228;
+    border: 2px solid #000;
+    border-radius: 8%;
+    margin: 4px;
+    padding: 1vh;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.buttonPanel>*:hover {
+    background: #222b;
+}

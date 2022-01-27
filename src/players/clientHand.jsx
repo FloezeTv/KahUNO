@@ -3,6 +3,8 @@ import Client from "../connection/client";
 import Hand from "../players/hand";
 import style from "./clientHand.module.css";
 import ColorChooser from "./colorChooser";
+import draw from "../rsc/draw_icon.svg";
+import one_card from "../rsc/one_card.svg";
 
 class ClientHand extends React.Component {
 
@@ -47,6 +49,10 @@ class ClientHand extends React.Component {
                 <>
                     <Hand cards={this.state.cards} sort onClick={c => this.client.tryPlayCard(c)} />
                     {this.state.chooseColor && <ColorChooser onClick={color => { this.setState({ chooseColor: false }); this.client.chooseColor(color) }} />}
+                    <div className={style.buttonPanel}>
+                        <img src={draw} onClick={() => console.log("Draw card")} />
+                        <img src={one_card} onClick={() => console.log("One card left")} />
+                    </div>
                 </>
             );
         }
