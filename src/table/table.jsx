@@ -40,14 +40,26 @@ class Table extends React.Component {
         if (oldProps.card !== this.props.card) {
             const angle = Math.random() * 2 * Math.PI;
 
-            this.setState({
-                cards: purgeOldCards(this.state.cards).concat({
-                    ...this.props.card,
-                    time: Date.now(),
-                    dirX: Math.sin(angle),
-                    dirY: Math.cos(angle),
-                })
-            });
+            if (this.props.card.update) {
+                const oldCard = this.state.cards[this.state.cards.length - 1];
+                this.setState({
+                    cards: this.state.cards.slice(0, this.state.cards.length - 1).concat({
+                        ...this.props.card,
+                        time: oldCard.time,
+                        dirX: oldCard.dirX,
+                        dirY: oldCard.dirY,
+                    })
+                });
+            } else {
+                this.setState({
+                    cards: purgeOldCards(this.state.cards).concat({
+                        ...this.props.card,
+                        time: Date.now(),
+                        dirX: Math.sin(angle),
+                        dirY: Math.cos(angle),
+                    })
+                });
+            }
         }
     }
 }

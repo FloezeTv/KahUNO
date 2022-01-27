@@ -1,0 +1,47 @@
+@import url("../rsc/CabinModified/CabinModified.css");
+
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+.container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #000000A0;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: min(max(30%, 500px), 90vw);
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    color: white;
+    font-family: 'Cabin', sans-serif;
+    font-size: 48px;
+    margin-bottom: 8px;
+}
+
+.list {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.list>* {
+    cursor: pointer;
+    width: 100%;
+    aspect-ratio: 1;
+    border: 2px solid black;
+    transition: 0.3s;
+}
+
+.list>*:hover {
+    transform: scale(125%);
+    z-index: 5;
+}

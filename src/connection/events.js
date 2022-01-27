@@ -52,6 +52,26 @@ class CardPlayEvent extends Event {
 
 }
 
+class ChooseColorEvent extends Event {
+
+    static type = 'chooseColor';
+
+    constructor() {
+        super(ChooseColorEvent.type, {})
+    }
+
+}
+
+class ColorChosenEvent extends Event {
+
+    static type = 'colorChosen';
+
+    constructor(color) {
+        super(ColorChosenEvent.type, {'color': color});
+    }
+
+}
+
 function EventHandler() {
     this.handlers = {};
     this.handler = (conn) => (msg) => {
@@ -102,4 +122,4 @@ const PingHandler = (eventHandler, deadCallback, WAIT_TIME = 10000) => {
     }
 };
 
-export { EventHandler, PingHandler, ConnectEvent, PingEvent, CardDrawEvent, CardHandSendEvent, CardPlayEvent };
+export { EventHandler, PingHandler, ConnectEvent, PingEvent, CardDrawEvent, CardHandSendEvent, CardPlayEvent, ChooseColorEvent, ColorChosenEvent };

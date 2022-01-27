@@ -1,5 +1,5 @@
 import { getDrawPile, shuffle } from "../components/card";
-import { CardDrawEvent, CardHandSendEvent } from "./events";
+import { CardDrawEvent, CardHandSendEvent, ChooseColorEvent } from "./events";
 
 const START_CARDS = 7;
 
@@ -7,6 +7,7 @@ class Game {
 
     // Callbacks:
     // - onCurrentCardChange: when the current card changes
+    // - onCurrentCardUpdate: when the current card needs to be updated (wildcard)
 
     constructor(callbacks) {
         this.callbacks = callbacks || {};
@@ -35,6 +36,7 @@ class Game {
         this.currentPlayers = []; // ids
         this.currentPlayer = 0;
         this.playerData = {}; // id -> data (cards, ...)
+        this.choosingColor = false;
     }
 
     start() {
@@ -80,7 +82,7 @@ class Game {
     }
 
     playCard(id, card) {
-        if (!this.isCurrentPlayer(id) || !this.canPlayCard(card))
+        if (!this.isCurrentPlayer(id) || !this.canPlayCard(card) || this.chooseColor)
             return;
         const playerData = this.playerData[id];
         if (!playerData)
@@ -90,13 +92,25 @@ class Game {
             playerData.cards.splice(cardIndex, 1);
             this.players[id].connection.send(new CardHandSendEvent(playerData.cards));
             this.setCurrentCard(card);
-            this.nextPlayer();
+            if (card.color === "black") {
+                this.players[id].connection.send(new ChooseColorEvent());
+                this.choosingColor = true;
+            } else
+                this.nextPlayer();
         }
     }
 
+    chooseColor(id, color) {
+        if (this.isCurrentPlayer(id) && this.chooseColor) {
+            this.currentCard.color = color;
+            this.callback('onCurrentCardUpdate', this.currentCard);
+            this.nextPlayer();
+        }
+
+    }
+
     canPlayCard(card) {
-        // TODO: check if card is wild
-        return this.currentCard.value === card.value || this.currentCard.color == card.color || card.color == 'black';
+        return this.currentCard.value === card.value || this.currentCard.color === card.color || card.color === 'black';
     }
 
     isCurrentPlayer(id) {
@@ -115,6 +129,8 @@ class Game {
             const card = cards[cardIndex];
             if (this.canPlayCard(card)) {
                 cards.splice(cardIndex, 1);
+                if (card.color === "black")
+                    card.color = cards[0].color || "red";
                 this.setCurrentCard(card);
                 this.nextPlayer();
                 return;

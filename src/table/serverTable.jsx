@@ -35,6 +35,7 @@ class ServerTable extends React.Component {
             onLeave: (id, player) => this.addMessage(`${id}-leave`, `${player.name} left`),
         });
         this.server.game.callbacks.onCurrentCardChange = card => this.setState({ currentCard: card });
+        this.server.game.callbacks.onCurrentCardUpdate = card => this.setState({ currentCard: { ...card, update: true } });
     }
 
     render() {
