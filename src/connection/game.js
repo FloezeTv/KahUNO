@@ -105,6 +105,16 @@ class Game {
             this.sendCard(id);
     }
 
+    announceOneCardLeft(id) {
+        const prevPlayer = this.getPreviousPlayer();
+        if (id === this.currentPlayers[prevPlayer]) {
+            const playerData = this.playerData[this.currentPlayers[prevPlayer]];
+            if (playerData.cards.length == 1)
+                playerData.announcedOneCardLeft = true;
+            else; // player announced one card, when not necessary
+        } else; // player announced one card sometime when not supposed to
+    }
+
     chooseColor(id, color) {
         if (this.isCurrentPlayer(id) && this.choosingColor) {
             this.currentCard.color = color;
@@ -123,7 +133,23 @@ class Game {
         return this.currentPlayers[this.currentPlayer] === id;
     }
 
+    getPreviousPlayer() {
+        let prevPlayer = (this.currentPlayer - 1) % this.currentPlayers.length;
+        if (prevPlayer < 0)
+            prevPlayer += this.currentPlayers.length;
+        return prevPlayer;
+    }
+
+    checkLastPlayerAnnouncedLastCardLeft() {
+        const prevPlayer = this.getPreviousPlayer();
+        const playerData = this.playerData[this.currentPlayers[prevPlayer]];
+        if (playerData.cards.length === 1 && !playerData.announcedOneCardLeft)
+            this.sendCard(this.currentPlayers[prevPlayer]);
+        playerData.announcedOneCardLeft = false;
+    }
+
     nextPlayer() {
+        this.checkLastPlayerAnnouncedLastCardLeft();
         this.currentPlayer = (this.currentPlayer + 1) % this.currentPlayers.length;
         if (!this.players[this.currentPlayers[this.currentPlayer]])
             this.makeBotMove();

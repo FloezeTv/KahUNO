@@ -51,7 +51,7 @@ class ClientHand extends React.Component {
                     {this.state.chooseColor && <ColorChooser onClick={color => { this.setState({ chooseColor: false }); this.client.chooseColor(color) }} />}
                     <div className={style.buttonPanel}>
                         <img src={draw} onClick={() => this.client.drawCard()} />
-                        <img src={one_card} onClick={() => console.log("One card left")} />
+                        <img src={one_card} onClick={() => this.client.announceOneCardLeft()} />
                     </div>
                 </>
             );
