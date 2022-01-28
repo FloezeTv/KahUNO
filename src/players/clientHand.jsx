@@ -50,7 +50,7 @@ class ClientHand extends React.Component {
                     <Hand cards={this.state.cards} sort onClick={c => this.client.tryPlayCard(c)} />
                     {this.state.chooseColor && <ColorChooser onClick={color => { this.setState({ chooseColor: false }); this.client.chooseColor(color) }} />}
                     <div className={style.buttonPanel}>
-                        <img src={draw} onClick={() => console.log("Draw card")} />
+                        <img src={draw} onClick={() => this.client.drawCard()} />
                         <img src={one_card} onClick={() => console.log("One card left")} />
                     </div>
                 </>

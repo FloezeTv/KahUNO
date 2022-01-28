@@ -100,6 +100,11 @@ class Game {
         }
     }
 
+    drawCard(id) {
+        if (this.isCurrentPlayer(id))
+            this.sendCard(id);
+    }
+
     chooseColor(id, color) {
         if (this.isCurrentPlayer(id) && this.choosingColor) {
             this.currentCard.color = color;
