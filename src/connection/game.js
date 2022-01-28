@@ -104,6 +104,7 @@ class Game {
         if (this.isCurrentPlayer(id) && this.choosingColor) {
             this.currentCard.color = color;
             this.callback('onCurrentCardUpdate', this.currentCard);
+            this.choosingColor = false;
             this.nextPlayer();
         }
 
