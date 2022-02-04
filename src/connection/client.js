@@ -1,5 +1,5 @@
 import Peer from "peerjs";
-import { CardHandSendEvent, CardPlayEvent, ChooseColorEvent, ColorChosenEvent, ConnectEvent, EventHandler, PingHandler, CardDrawEvent, OneCardLeftEvent } from "./events";
+import { CardHandSendEvent, CardPlayEvent, ChooseColorEvent, ColorChosenEvent, ConnectEvent, EventHandler, PingHandler, CardDrawEvent, OneCardLeftEvent, ButtonsDisplayEvent, NextTurnEvent } from "./events";
 
 class Client {
 
@@ -16,6 +16,7 @@ class Client {
 
         this.eventHandler.on(CardHandSendEvent, this.callbacks.onHandUpdate);
         this.eventHandler.on(ChooseColorEvent, this.callbacks.onChooseColor);
+        this.eventHandler.on(ButtonsDisplayEvent, this.callbacks.onButtonsDisplay);
 
         this.pingHandler = PingHandler(this.eventHandler, () => console.warn("Disconnected!"));
 
@@ -58,6 +59,10 @@ class Client {
 
     announceOneCardLeft() {
         this.send(new OneCardLeftEvent());
+    }
+
+    nextTurn() {
+        this.send(new NextTurnEvent());
     }
 
 }

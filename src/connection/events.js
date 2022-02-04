@@ -81,6 +81,26 @@ class ColorChosenEvent extends Event {
 
 }
 
+class ButtonsDisplayEvent extends Event {
+
+    static type = 'displayButtons';
+
+    constructor(nextTurn, drawCard, oneCard) {
+        super(ButtonsDisplayEvent.type, { 'nextTurn': nextTurn, 'drawCard': drawCard, 'oneCard': oneCard });
+    }
+
+}
+
+class NextTurnEvent extends Event {
+
+    static type = 'nextTurn';
+
+    constructor() {
+        super(NextTurnEvent.type, {});
+    }
+
+}
+
 function EventHandler() {
     this.handlers = {};
     this.handler = (conn) => (msg) => {
@@ -131,4 +151,4 @@ const PingHandler = (eventHandler, deadCallback, WAIT_TIME = 10000) => {
     }
 };
 
-export { EventHandler, PingHandler, ConnectEvent, PingEvent, CardHandSendEvent, CardPlayEvent, CardDrawEvent, ChooseColorEvent, ColorChosenEvent, OneCardLeftEvent };
+export { EventHandler, PingHandler, ConnectEvent, PingEvent, CardHandSendEvent, CardPlayEvent, CardDrawEvent, ChooseColorEvent, ColorChosenEvent, OneCardLeftEvent, ButtonsDisplayEvent, NextTurnEvent };

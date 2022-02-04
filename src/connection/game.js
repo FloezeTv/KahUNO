@@ -1,5 +1,5 @@
 import { getDrawPile, shuffle } from "../components/card";
-import { CardHandSendEvent, ChooseColorEvent } from "./events";
+import { ButtonsDisplayEvent, CardHandSendEvent, ChooseColorEvent } from "./events";
 
 const START_CARDS = 7;
 
@@ -50,10 +50,13 @@ class Game {
                 'cards': []
             }
             player.connection.send(new CardHandSendEvent([]));
+            player.connection.send(new ButtonsDisplayEvent(false, false, false));
             this.currentPlayers.push(id);
             for (let i = 0; i < START_CARDS; i++)
                 this.sendCard(id);
         });
+
+        this.players[this.currentPlayers[0]].connection.send(new ButtonsDisplayEvent(false, true, false));
     }
 
     setCurrentCard(card) {
@@ -101,8 +104,20 @@ class Game {
     }
 
     drawCard(id) {
-        if (this.isCurrentPlayer(id))
+        if (this.isCurrentPlayer(id)) {
             this.sendCard(id);
+            this.players[id].connection.send(new ButtonsDisplayEvent(true, false, false));
+            this.playerData[id].drewCard = true;
+        }
+    }
+
+    nextTurn(id) {
+        if (this.isCurrentPlayer(id)) {
+            if (this.playerData[this.currentPlayers[this.currentPlayer]])
+                this.nextPlayer();
+            else
+                this.players[this.currentPlayers[this.currentPlayer]].connection.send(new ButtonsDisplayEvent(false, true, false));
+        }
     }
 
     announceOneCardLeft(id) {
@@ -142,6 +157,7 @@ class Game {
 
     checkLastPlayerAnnouncedLastCardLeft() {
         const prevPlayer = this.getPreviousPlayer();
+        this.players[this.currentPlayers[prevPlayer]].connection.send(new ButtonsDisplayEvent(false, false, false));
         const playerData = this.playerData[this.currentPlayers[prevPlayer]];
         if (playerData.cards.length === 1 && !playerData.announcedOneCardLeft)
             this.sendCard(this.currentPlayers[prevPlayer]);
@@ -150,7 +166,10 @@ class Game {
 
     nextPlayer() {
         this.checkLastPlayerAnnouncedLastCardLeft();
+        this.players[this.currentPlayers[this.currentPlayer]].connection.send(new ButtonsDisplayEvent(false, false, true));
         this.currentPlayer = (this.currentPlayer + 1) % this.currentPlayers.length;
+        this.players[this.currentPlayers[this.currentPlayer]].connection.send(new ButtonsDisplayEvent(false, true, false));
+        this.playerData[this.currentPlayers[this.currentPlayer]].drewCard = false;
         if (!this.players[this.currentPlayers[this.currentPlayer]])
             this.makeBotMove();
     }

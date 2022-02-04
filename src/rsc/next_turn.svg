@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="131px" height="117px" viewBox="-5 -15 140 150">
+    <defs />
+    <g>
+        <path d="M 50.5 78 L 50.5 38 L 89.5 38 L 89.5 0 L 129.5 58 L 89.5 116 L 89.5 78 Z" fill="none" stroke="#ffffff" stroke-width="8" stroke-miterlimit="10" pointer-events="all" />
+        <rect x="20" y="38" width="20" height="40" fill="none" stroke="#ffffff" stroke-width="8" pointer-events="all" />
+        <rect x="0" y="38" width="10" height="40" fill="none" stroke="#ffffff" stroke-width="8" pointer-events="all" />
+    </g>
+</svg>

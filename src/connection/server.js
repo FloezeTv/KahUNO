@@ -1,5 +1,5 @@
 import Peer from "peerjs";
-import { CardDrawEvent, CardPlayEvent, ColorChosenEvent, ConnectEvent, EventHandler, OneCardLeftEvent, PingHandler } from "./events";
+import { CardDrawEvent, CardPlayEvent, ColorChosenEvent, ConnectEvent, EventHandler, NextTurnEvent, OneCardLeftEvent, PingHandler } from "./events";
 import Game from "./game";
 
 class Server {
@@ -27,6 +27,7 @@ class Server {
         this.eventHandler.on(ColorChosenEvent, (event, conn) => {console.log("Received ColorChosenEvent"); this.game.chooseColor(conn.peer, event.color);});
         this.eventHandler.on(CardDrawEvent, (event, conn) => this.game.drawCard(conn.peer));
         this.eventHandler.on(OneCardLeftEvent, (event, conn) => this.game.announceOneCardLeft(conn.peer));
+        this.eventHandler.on(NextTurnEvent, (event, conn) => this.game.nextTurn(conn.peer));
 
         this.pingHandler = PingHandler(this.eventHandler, (id, connection) => {
             this.game.removePlayer(id);
