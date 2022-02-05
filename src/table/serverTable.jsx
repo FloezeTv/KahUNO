@@ -3,6 +3,7 @@ import Server from "../connection/server"
 import Table from "./table";
 import style from "./serverTable.module.css";
 import qrcode from "qrcode";
+import WinnerDisplay from "../components/winnerDisplay";
 
 class ServerTable extends React.Component {
 
@@ -16,6 +17,7 @@ class ServerTable extends React.Component {
             players: [],
             started: false,
             messages: [],
+            winner: null,
         };
     }
 
@@ -36,6 +38,7 @@ class ServerTable extends React.Component {
         });
         this.server.game.callbacks.onCurrentCardChange = card => this.setState({ currentCard: card });
         this.server.game.callbacks.onCurrentCardUpdate = card => this.setState({ currentCard: { ...card, update: true } });
+        this.server.game.callbacks.onWin = id => this.setState({winner: id});
     }
 
     render() {
@@ -45,6 +48,9 @@ class ServerTable extends React.Component {
                 <div className={style.messages}>
                     {this.state.messages.map(message => <div key={message.key} >{message.text}</div>)}
                 </div>
+                {this.state.winner &&
+                    <WinnerDisplay name={this.server.getName(this.state.winner)}/>
+                }
                 {!this.state.started &&
                     <div className={style.join}>
                         {this.state.idQr && <img src={this.state.idQr} className={style.qr} />}

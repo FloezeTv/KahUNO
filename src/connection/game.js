@@ -165,6 +165,7 @@ class Game {
     }
 
     nextPlayer() {
+        this.checkWin();
         this.checkLastPlayerAnnouncedLastCardLeft();
         this.players[this.currentPlayers[this.currentPlayer]].connection.send(new ButtonsDisplayEvent(false, false, true));
         this.currentPlayer = (this.currentPlayer + 1) % this.currentPlayers.length;
@@ -172,6 +173,12 @@ class Game {
         this.playerData[this.currentPlayers[this.currentPlayer]].drewCard = false;
         if (!this.players[this.currentPlayers[this.currentPlayer]])
             this.makeBotMove();
+    }
+
+    checkWin() {
+        if(this.playerData[this.currentPlayers[this.currentPlayer]].cards.length === 0) {
+            this.callback('onWin', this.currentPlayers[this.currentPlayer]);
+        }
     }
 
     makeBotMove() {

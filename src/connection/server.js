@@ -55,6 +55,10 @@ class Server {
         return this.server.id;
     }
 
+    getName(id) {
+        return this.playerData[id]?.name;
+    }
+
 }
 
 export default Server;
