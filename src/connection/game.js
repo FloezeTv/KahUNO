@@ -121,13 +121,10 @@ class Game {
     }
 
     announceOneCardLeft(id) {
-        const prevPlayer = this.getPreviousPlayer();
-        if (id === this.getPlayerId(prevPlayer)) {
-            const playerData = this.getPlayerData(prevPlayer);
-            if (playerData.cards.length === 1)
-                playerData.announcedOneCardLeft = true;
-            else; // player announced one card, when not necessary
-        } else; // player announced one card sometime when not supposed to
+        const playerData = this.getPlayerData(id);
+        if (playerData.cards.length === 1)
+            playerData.announcedOneCardLeft = true;
+        else; // player announced one card, when not necessary
     }
 
     chooseColor(id, color) {
@@ -151,20 +148,18 @@ class Game {
         return prevPlayer;
     }
 
-    checkLastPlayerAnnouncedLastCardLeft() {
-        const prevPlayer = this.getPreviousPlayer();
-        this.getPlayerConnection(prevPlayer).send(new ButtonsDisplayEvent(false, false, false));
-        const playerData = this.getPlayerData(prevPlayer);
+    checkPlayerAnnouncedLastCardLeft() {
+        const playerData = this.getPlayerData();
         if (playerData.cards.length === 1 && !playerData.announcedOneCardLeft)
-            this.sendCard(this.getPlayerId(prevPlayer));
+            this.sendCard(this.getPlayerId());
         playerData.announcedOneCardLeft = false;
     }
 
     nextPlayer() {
         this.checkWin();
-        this.checkLastPlayerAnnouncedLastCardLeft();
         this.getPlayerConnection().send(new ButtonsDisplayEvent(false, false, true));
         this.currentPlayer = (this.currentPlayer + 1) % this.currentPlayers.length;
+        this.checkPlayerAnnouncedLastCardLeft();
         this.getPlayerConnection().send(new ButtonsDisplayEvent(false, true, false));
         this.getPlayerData().drewCard = false;
         if (!this.isPlayerOnline())
