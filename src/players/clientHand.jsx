@@ -41,7 +41,7 @@ class ClientHand extends React.Component {
             return (
                 <div className={style.nameForm}>
                     <div>Enter name:</div>
-                    <input type="text" onKeyDown={e => e.key == "Enter" && this.connect()} value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
+                    <input type="text" onKeyDown={e => e.key === "Enter" && this.connect()} value={this.state.name} onChange={e => this.setState({ name: e.target.value })} />
                     <button onClick={() => this.connect()}>Join</button>
                 </div>
             )
@@ -53,9 +53,9 @@ class ClientHand extends React.Component {
                     <Hand cards={this.state.cards} sort onClick={c => this.client.tryPlayCard(c)} />
                     {this.state.chooseColor && <ColorChooser onClick={color => { this.setState({ chooseColor: false }); this.client.chooseColor(color) }} />}
                     <div className={style.buttonPanel}>
-                        {this.state.buttons.nextTurn && <img src={next_turn} onClick={() => this.client.nextTurn()} />}
-                        {this.state.buttons.drawCard && <img src={draw} onClick={() => this.client.drawCard()} />}
-                        {this.state.buttons.oneCard && <img src={one_card} onClick={() => this.client.announceOneCardLeft()} />}
+                        {this.state.buttons.nextTurn && <img src={next_turn} alt="Next turn" onClick={() => this.client.nextTurn()} />}
+                        {this.state.buttons.drawCard && <img src={draw} alt="Draw card" onClick={() => this.client.drawCard()} />}
+                        {this.state.buttons.oneCard && <img src={one_card} alt="One card left" onClick={() => this.client.announceOneCardLeft()} />}
                     </div>
                 </>
             );

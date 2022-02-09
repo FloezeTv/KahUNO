@@ -53,7 +53,7 @@ class ServerTable extends React.Component {
                 }
                 {!this.state.started &&
                     <div className={style.join}>
-                        {this.state.idQr && <img src={this.state.idQr} className={style.qr} />}
+                        {this.state.idQr && <img src={this.state.idQr} className={style.qr} alt="QR-Code" />}
                         <div className={style.id}>ID: {this.state.id}</div>
                         <button className={style.button} onClick={() => { this.setState({ started: true }); this.server.game.start(); }}>Start!</button>
                     </div>
