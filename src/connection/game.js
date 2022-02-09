@@ -56,7 +56,7 @@ class Game {
                 this.sendCard(id);
         });
 
-        this.players[this.currentPlayers[0]].connection.send(new ButtonsDisplayEvent(false, true, false));
+        this.getPlayerConnection(0).send(new ButtonsDisplayEvent(false, true, false));
     }
 
     setCurrentCard(card) {
@@ -113,18 +113,18 @@ class Game {
 
     nextTurn(id) {
         if (this.isCurrentPlayer(id)) {
-            if (this.playerData[this.currentPlayers[this.currentPlayer]])
+            if (this.getPlayerData().drewCard)
                 this.nextPlayer();
             else
-                this.players[this.currentPlayers[this.currentPlayer]].connection.send(new ButtonsDisplayEvent(false, true, false));
+                this.getPlayerConnection().send(new ButtonsDisplayEvent(false, true, false));
         }
     }
 
     announceOneCardLeft(id) {
         const prevPlayer = this.getPreviousPlayer();
-        if (id === this.currentPlayers[prevPlayer]) {
-            const playerData = this.playerData[this.currentPlayers[prevPlayer]];
-            if (playerData.cards.length == 1)
+        if (id === this.getPlayerId(prevPlayer)) {
+            const playerData = this.getPlayerData(prevPlayer);
+            if (playerData.cards.length === 1)
                 playerData.announcedOneCardLeft = true;
             else; // player announced one card, when not necessary
         } else; // player announced one card sometime when not supposed to
@@ -144,10 +144,6 @@ class Game {
         return this.currentCard.value === card.value || this.currentCard.color === card.color || card.color === 'black';
     }
 
-    isCurrentPlayer(id) {
-        return this.currentPlayers[this.currentPlayer] === id;
-    }
-
     getPreviousPlayer() {
         let prevPlayer = (this.currentPlayer - 1) % this.currentPlayers.length;
         if (prevPlayer < 0)
@@ -157,32 +153,32 @@ class Game {
 
     checkLastPlayerAnnouncedLastCardLeft() {
         const prevPlayer = this.getPreviousPlayer();
-        this.players[this.currentPlayers[prevPlayer]].connection.send(new ButtonsDisplayEvent(false, false, false));
-        const playerData = this.playerData[this.currentPlayers[prevPlayer]];
+        this.getPlayerConnection(prevPlayer).send(new ButtonsDisplayEvent(false, false, false));
+        const playerData = this.getPlayerData(prevPlayer);
         if (playerData.cards.length === 1 && !playerData.announcedOneCardLeft)
-            this.sendCard(this.currentPlayers[prevPlayer]);
+            this.sendCard(this.getPlayerId(prevPlayer));
         playerData.announcedOneCardLeft = false;
     }
 
     nextPlayer() {
         this.checkWin();
         this.checkLastPlayerAnnouncedLastCardLeft();
-        this.players[this.currentPlayers[this.currentPlayer]].connection.send(new ButtonsDisplayEvent(false, false, true));
+        this.getPlayerConnection().send(new ButtonsDisplayEvent(false, false, true));
         this.currentPlayer = (this.currentPlayer + 1) % this.currentPlayers.length;
-        this.players[this.currentPlayers[this.currentPlayer]].connection.send(new ButtonsDisplayEvent(false, true, false));
-        this.playerData[this.currentPlayers[this.currentPlayer]].drewCard = false;
-        if (!this.players[this.currentPlayers[this.currentPlayer]])
+        this.getPlayerConnection().send(new ButtonsDisplayEvent(false, true, false));
+        this.getPlayerData().drewCard = false;
+        if (!this.isPlayerOnline())
             this.makeBotMove();
     }
 
     checkWin() {
-        if(this.playerData[this.currentPlayers[this.currentPlayer]].cards.length === 0) {
-            this.callback('onWin', this.currentPlayers[this.currentPlayer]);
+        if(this.getPlayerData().cards.length === 0) {
+            this.callback('onWin', this.getPlayerId());
         }
     }
 
     makeBotMove() {
-        const cards = this.playerData[this.currentPlayers[this.currentPlayer]].cards;
+        const cards = this.getPlayerData().cards;
         for (let cardIndex = 0; cardIndex < cards.length; cardIndex++) {
             const card = cards[cardIndex];
             if (this.canPlayCard(card)) {
@@ -198,6 +194,25 @@ class Game {
         // TODO: draw card
     }
 
+    getPlayerId(playerIndex = this.currentPlayer) {
+        return this.currentPlayers[playerIndex];
+    }
+
+    getPlayerData(playerIndex = this.currentPlayer) {
+        return this.playerData[this.getPlayerId(playerIndex)];
+    }
+
+    getPlayerConnection(playerIndex = this.currentPlayer) {
+        return this.players[this.getPlayerId(playerIndex)].connection;
+    }
+
+    isCurrentPlayer(id) {
+        return this.getPlayerId() === id;
+    }
+
+    isPlayerOnline(playerIndex = this.currentPlayer) {
+        return this.players[this.getPlayerId(playerIndex)];
+    }
 }
 
 export default Game;
