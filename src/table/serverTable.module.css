@@ -72,9 +72,26 @@
     animation: fade-in 0.5s ease, fade-out 1s ease 5s forwards;
 }
 
+.playAgain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: fit-content;
+    margin: auto;
+    transform: translate(0, 160px);
+    opacity: 0;
+    animation: fade-in 1s ease 3s forwards;
+}
+
 @keyframes fade-in {
     0% {
         opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
     }
 }
 

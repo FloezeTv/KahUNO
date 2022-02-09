@@ -49,13 +49,15 @@ class ServerTable extends React.Component {
                     {this.state.messages.map(message => <div key={message.key} >{message.text}</div>)}
                 </div>
                 {this.state.winner &&
-                    <WinnerDisplay name={this.server.getName(this.state.winner)}/>
+                    <WinnerDisplay name={this.server.getName(this.state.winner)}>
+                        <button className={style.button + ' ' + style.playAgain} onClick={() => this.setState({ started: false })}>Play again!</button>
+                    </WinnerDisplay>
                 }
                 {!this.state.started &&
                     <div className={style.join}>
                         {this.state.idQr && <img src={this.state.idQr} className={style.qr} alt="QR-Code" />}
                         <div className={style.id}>ID: {this.state.id}</div>
-                        <button className={style.button} onClick={() => { this.setState({ started: true }); this.server.game.start(); }}>Start!</button>
+                        <button className={style.button} onClick={() => { this.setState({ started: true, winner: null }); this.server.game.start(); }}>Start!</button>
                     </div>
                 }
             </>

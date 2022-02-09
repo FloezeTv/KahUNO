@@ -9,6 +9,7 @@ class WinnerDisplay extends React.Component {
             <div className={style.container}>
                 <Confetti className={style.confetti} />
                 <div className={style.name}>{this.props.name || "Nobody"} won</div>
+                {this.props.children}
             </div>
         )
     }
