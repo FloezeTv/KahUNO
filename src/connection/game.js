@@ -37,6 +37,8 @@ class Game {
         this.currentPlayer = 0;
         this.playerData = {}; // id -> data (cards, ...)
         this.choosingColor = false;
+        this.direction = true;
+        this.skip = 0;
     }
 
     start() {
@@ -64,10 +66,13 @@ class Game {
         this.callback('onCurrentCardChange', card);
     }
 
-    sendCard(playerId) {
-        const card = this.drawPile.pop();
-        this.playerData[playerId].cards.push(card);
-        this.players[playerId].connection.send(new CardHandSendEvent(this.playerData[playerId].cards));
+    sendCard(playerId, count = 1) {
+        for(let i = 0; i < count; i++) {
+            this.assertDrawPile();
+            const card = this.drawPile.pop();
+            this.playerData[playerId].cards.push(card);
+            this.players[playerId].connection.send(new CardHandSendEvent(this.playerData[playerId].cards));
+        }
     }
 
     addDrawPile() {
@@ -141,11 +146,11 @@ class Game {
         return this.currentCard.value === card.value || this.currentCard.color === card.color || card.color === 'black';
     }
 
-    getPreviousPlayer() {
-        let prevPlayer = (this.currentPlayer - 1) % this.currentPlayers.length;
-        if (prevPlayer < 0)
-            prevPlayer += this.currentPlayers.length;
-        return prevPlayer;
+    getNextPlayer() {
+        let nextPlayer = (this.currentPlayer + (this.direction ? 1 : -1) * (this.skip + 1)) % this.currentPlayers.length;
+        if (nextPlayer < 0)
+            nextPlayer += this.currentPlayers.length;
+        return nextPlayer;
     }
 
     checkPlayerAnnouncedLastCardLeft() {
@@ -158,12 +163,35 @@ class Game {
     nextPlayer() {
         this.checkWin();
         this.getPlayerConnection().send(new ButtonsDisplayEvent(false, false, true));
-        this.currentPlayer = (this.currentPlayer + 1) % this.currentPlayers.length;
+        this.handleSpecialCardsPre();
+        this.currentPlayer = this.getNextPlayer();
+        this.handleSpecialCardsPost();
         this.checkPlayerAnnouncedLastCardLeft();
         this.getPlayerConnection().send(new ButtonsDisplayEvent(false, true, false));
         this.getPlayerData().drewCard = false;
         if (!this.isPlayerOnline())
             this.makeBotMove();
+    }
+
+    handleSpecialCardsPre() {
+        this.skip = this.currentCard.value === 'skip' ? 1 : 0;
+        if (this.currentCard.value === 'reverse') {
+            if(this.currentPlayers.length <= 2)
+                this.skip = 1; // reverse with 2 players is skip (according to official rules)
+            else
+                this.direction = !this.direction;
+        }
+    }
+
+    handleSpecialCardsPost() {
+        switch (this.currentCard.value) {
+            case 'draw':
+                this.sendCard(this.getPlayerId(), 2);
+                break;
+            case 'wild+4':
+                this.sendCard(this.getPlayerId(), 4);
+                break;
+        }
     }
 
     checkWin() {
