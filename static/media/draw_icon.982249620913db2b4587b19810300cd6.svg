@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="92px" height="132px" viewBox="-0.5 -0.5 92 132">
+    <defs>
+        <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Cabin);&#xa;</style>
+    </defs>
+    <g>
+        <rect x="6" y="6" width="80" height="120" rx="12" ry="12" fill="none" stroke="#ffffff" stroke-width="12" pointer-events="all" />
+        <g transform="translate(-0.5 -0.5)">
+            <text x="46" y="79" fill="#FFFFFF" font-family="Cabin" font-size="42px" text-anchor="middle" font-weight="bold">+1</text>
+        </g>
+    </g>
+</svg>

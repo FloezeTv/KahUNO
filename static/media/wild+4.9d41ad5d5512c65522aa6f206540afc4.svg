@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="161px" height="161px" viewBox="-5 -5 170 170">
+    <g>
+        <path d="M 80 80 L 23.43 23.43 C 38.43 8.43 58.78 0 80 0 C 101.22 0 121.57 8.43 136.57 23.43 Z" fill="var(--red)" pointer-events="all" />
+        <path d="M 80 80 L 136.57 23.43 C 151.57 38.43 160 58.78 160 80 C 160 101.22 151.57 121.57 136.57 136.57 Z" fill="var(--green)" pointer-events="all" />
+        <path d="M 80 80 L 136.57 136.57 C 105.33 167.81 54.67 167.81 23.43 136.57 Z" fill="var(--blue)" pointer-events="all" />
+        <path d="M 80 80 L 23.43 136.57 C -7.81 105.33 -7.81 54.67 23.43 23.43 Z" fill="var(--yellow)" pointer-events="all" />
+        <text x="80" y="118" fill="#FFFFFF" font-family="Cabin" font-size="128px" text-anchor="middle">+4</text>
+    </g>
+</svg>
