@@ -14,8 +14,6 @@ class Game {
 
         this.players = {}; // id -> player (connection, ...)
         this.reset();
-
-        console.log(this.drawPile);
     }
 
     addPlayer(connection, id) {
@@ -47,7 +45,13 @@ class Game {
         this.reset();
 
         this.addDrawPile();
-        this.setCurrentCard(this.drawPile.pop());
+        let startCard = this.drawPile.pop();
+        while(startCard.color === 'black') {
+            this.drawPile.unshift(startCard);
+            startCard = this.drawPile.pop();
+            console.log(startCard);
+        }
+        this.setCurrentCard(startCard);
 
         Object.entries(this.players).forEach(([id, player]) => {
             this.playerData[id] = {
@@ -78,7 +82,7 @@ class Game {
     }
 
     addDrawPile() {
-        this.drawPile = this.drawPile.concat(shuffle(getDrawPile()));
+        this.drawPile = shuffle(getDrawPile()).concat(this.drawPile);
     }
 
     assertDrawPile() {
