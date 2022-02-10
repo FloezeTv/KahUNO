@@ -40,6 +40,7 @@ class Game {
         this.direction = true;
         this.skip = 0;
         this.turnCheckAnnounceLastCardLeft = false;
+        this.playerSkippedTurn = false;
     }
 
     start() {
@@ -119,8 +120,10 @@ class Game {
 
     nextTurn(id) {
         if (this.isCurrentPlayer(id)) {
-            if (this.getPlayerData().drewCard)
+            if (this.getPlayerData().drewCard) {
+                this.playerSkippedTurn = true;
                 this.nextPlayer();
+            }
             else
                 this.getPlayerConnection().send(new ButtonsDisplayEvent(false, true, false));
         }
@@ -170,10 +173,17 @@ class Game {
 
         this.getPlayerConnection().send(new ButtonsDisplayEvent(false, false, true));
 
-        this.handleSpecialCardsPre();
+        this.handleSpecialCardsReset();
+
+        if(!this.playerSkippedTurn)
+            this.handleSpecialCardsPre();
+
         let prevPlayer = this.currentPlayer;
         this.currentPlayer = this.getNextPlayer();
-        this.handleSpecialCardsPost();
+
+        if(!this.playerSkippedTurn)
+            this.handleSpecialCardsPost();
+        this.playerSkippedTurn = false;
 
         if(prevPlayer !== this.currentPlayer) {
             this.checkPlayerAnnouncedLastCardLeft();
@@ -184,13 +194,14 @@ class Game {
         }
 
         this.getPlayerData().drewCard = false;
-        
+
         if (!this.isPlayerOnline())
             this.makeBotMove();
     }
 
     handleSpecialCardsPre() {
-        this.skip = this.currentCard.value === 'skip' ? 1 : 0;
+        if(this.currentCard.value === 'skip')
+            this.skip = 1;
         if (this.currentCard.value === 'reverse') {
             if(this.currentPlayers.length <= 2)
                 this.skip = 1; // reverse with 2 players is skip (according to official rules)
@@ -208,6 +219,10 @@ class Game {
                 this.sendCard(this.getPlayerId(), 4);
                 break;
         }
+    }
+
+    handleSpecialCardsReset() {
+        this.skip = 0;
     }
 
     checkWin() {
