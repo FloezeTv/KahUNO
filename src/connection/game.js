@@ -126,7 +126,7 @@ class Game {
     }
 
     announceOneCardLeft(id) {
-        const playerData = this.getPlayerData(id);
+        const playerData = this.playerData[id];
         if (playerData.cards.length === 1)
             playerData.announcedOneCardLeft = true;
         else; // player announced one card, when not necessary
