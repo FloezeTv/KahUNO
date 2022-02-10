@@ -39,6 +39,7 @@ class Game {
         this.choosingColor = false;
         this.direction = true;
         this.skip = 0;
+        this.turnCheckAnnounceLastCardLeft = false;
     }
 
     start() {
@@ -161,14 +162,29 @@ class Game {
     }
 
     nextPlayer() {
+        if(this.turnCheckAnnounceLastCardLeft && !this.getPlayerData().announcedOneCardLeft && this.getPlayerData().cards.length === 0)
+            this.sendCard(this.getPlayerId());
+        this.turnCheckAnnounceLastCardLeft = false;
+
         this.checkWin();
+
         this.getPlayerConnection().send(new ButtonsDisplayEvent(false, false, true));
+
         this.handleSpecialCardsPre();
+        let prevPlayer = this.currentPlayer;
         this.currentPlayer = this.getNextPlayer();
         this.handleSpecialCardsPost();
-        this.checkPlayerAnnouncedLastCardLeft();
-        this.getPlayerConnection().send(new ButtonsDisplayEvent(false, true, false));
+
+        if(prevPlayer !== this.currentPlayer) {
+            this.checkPlayerAnnouncedLastCardLeft();
+            this.getPlayerConnection().send(new ButtonsDisplayEvent(false, true, false));
+        } else {
+            this.turnCheckAnnounceLastCardLeft = true;
+            this.getPlayerConnection().send(new ButtonsDisplayEvent(false, true, true));
+        }
+
         this.getPlayerData().drewCard = false;
+        
         if (!this.isPlayerOnline())
             this.makeBotMove();
     }
