@@ -5,6 +5,13 @@ class Event {
     }
 }
 
+// The following is needed to allow PeerJS binarypack to pack Events after being compiled to webpack.
+//
+// Removing this will still work in dev server, as the information is stored of this being a class.
+// After building however, this will throw an error (type function ... is not supported yet),
+// as the information of this being a class is lost when compiling.
+Event.prototype.constructor.toString = () => "class Event";
+
 class ConnectEvent extends Event {
 
     static type = 'connect';
