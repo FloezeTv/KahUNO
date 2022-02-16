@@ -8,6 +8,7 @@ class Game {
     // Callbacks:
     // - onCurrentCardChange: when the current card changes
     // - onCurrentCardUpdate: when the current card needs to be updated (wildcard)
+    // - onPlayerAnnouncedLastCard: when a player announced he has only one card left
 
     constructor(callbacks) {
         this.callbacks = callbacks || {};
@@ -135,9 +136,12 @@ class Game {
 
     announceOneCardLeft(id) {
         const playerData = this.playerData[id];
-        if (playerData.cards.length === 1)
-            playerData.announcedOneCardLeft = true;
-        else; // player announced one card, when not necessary
+        if (playerData.cards.length === 1) {
+            if (!playerData.announcedOneCardLeft) {
+                playerData.announcedOneCardLeft = true;
+                this.callback('onPlayerAnnouncedLastCard', id);
+            } else; // player announced one card multiple times
+        } else; // player announced one card, when not necessary
     }
 
     chooseColor(id, color) {

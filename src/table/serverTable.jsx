@@ -39,6 +39,7 @@ class ServerTable extends React.Component {
         this.server.game.callbacks.onCurrentCardChange = card => this.setState({ currentCard: card });
         this.server.game.callbacks.onCurrentCardUpdate = card => this.setState({ currentCard: { ...card, update: true } });
         this.server.game.callbacks.onWin = id => this.setState({winner: id});
+        this.server.game.callbacks.onPlayerAnnouncedLastCard = id => this.addMessage(`${id}-one`, `${this.server.getName(id)} has one card!`);
     }
 
     render() {
