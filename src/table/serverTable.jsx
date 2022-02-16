@@ -14,7 +14,6 @@ class ServerTable extends React.Component {
             id: 'loading',
             idQr: null,
             currentCard: { color: 'black', value: 'wild' },
-            players: [],
             started: false,
             messages: [],
             winner: null,
@@ -51,7 +50,7 @@ class ServerTable extends React.Component {
                 </div>
                 {this.state.winner &&
                     <WinnerDisplay name={this.server.getName(this.state.winner)}>
-                        <button className={style.button + ' ' + style.playAgain} onClick={() => this.setState({ started: false })}>Play again!</button>
+                        <button className={style.button + ' ' + style.playAgain} onClick={() => this.setState({ started: false, winner: null })}>Play again!</button>
                     </WinnerDisplay>
                 }
                 {!this.state.started &&

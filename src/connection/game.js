@@ -8,6 +8,7 @@ class Game {
     // Callbacks:
     // - onCurrentCardChange: when the current card changes
     // - onCurrentCardUpdate: when the current card needs to be updated (wildcard)
+    // - onWin: when a player won the game
     // - onPlayerAnnouncedLastCard: when a player announced he has only one card left
 
     constructor(callbacks) {
